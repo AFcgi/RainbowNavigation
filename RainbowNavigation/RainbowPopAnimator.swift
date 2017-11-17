@@ -10,8 +10,10 @@ class RainbowPopAnimator: NSObject, UIViewControllerAnimatedTransitioning {
     var animating = false
     
     func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
-        return 0.2
-    }
+		// changed by cgi
+		return TimeInterval(UINavigationControllerHideShowBarDuration)
+	}
+	
     func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
         let fromVC = transitionContext.viewController(forKey: UITransitionContextViewControllerKey.from)!
         let toVC = transitionContext.viewController(forKey: UITransitionContextViewControllerKey.to)!
@@ -22,7 +24,17 @@ class RainbowPopAnimator: NSObject, UIViewControllerAnimatedTransitioning {
         var nextColor:UIColor?
         nextColor = fromColorSource?.navigationBarOutColor?()
         nextColor = toColorSource?.navigationBarInColor?()
-        
+		
+		// added by cgi
+		var nextStatusBarColor:UIColor?
+		nextStatusBarColor = fromColorSource?.statusBarOutMaskColor?()
+		nextStatusBarColor = toColorSource?.statusBarInMaskColor?()
+		
+		var nextTintColor:UIColor?
+		nextTintColor = fromColorSource?.tintOutColor?()
+		nextTintColor = toColorSource?.tintInColor?()
+		
+		
         let containerView = transitionContext.containerView
         let shadowMask = UIView(frame: containerView.bounds)
         shadowMask.backgroundColor = UIColor.black
@@ -43,8 +55,24 @@ class RainbowPopAnimator: NSObject, UIViewControllerAnimatedTransitioning {
             shadowMask.alpha = 0
             if let navigationColor = nextColor {
                 fromVC.navigationController?.navigationBar.rb.backgroundColor = navigationColor
+				
+				// added bei htr
+				toVC.navigationController?.navigationBar.rb.backgroundColor = navigationColor
             }
-            
+			
+			// added by cgi
+			if let statusBarColor = nextStatusBarColor {
+				fromVC.navigationController?.navigationBar.rb.statusBarColor = statusBarColor
+				// added bei htr
+				toVC.navigationController?.navigationBar.rb.statusBarColor = statusBarColor
+			}
+			
+			if let tintColor = nextTintColor {
+				fromVC.navigationController?.navigationBar.tintColor = tintColor
+				// added bei htr
+				toVC.navigationController?.navigationBar.tintColor = tintColor
+			}
+			
             }) { (finished) -> Void in
                 self.animating = false
                 shadowMask.removeFromSuperview()

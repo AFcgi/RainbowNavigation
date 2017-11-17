@@ -8,7 +8,8 @@
 
 class RainbowPushAnimator: NSObject, UIViewControllerAnimatedTransitioning {
     func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
-        return 0.3
+		// changed by cgi
+		return TimeInterval(UINavigationControllerHideShowBarDuration)
     }
     func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
 
@@ -22,6 +23,16 @@ class RainbowPushAnimator: NSObject, UIViewControllerAnimatedTransitioning {
         nextColor = fromColorSource?.navigationBarOutColor?()
         nextColor = toColorSource?.navigationBarInColor?()
 
+		// added by cgi
+		var nextStatusBarColor:UIColor?
+		nextStatusBarColor = fromColorSource?.statusBarOutMaskColor?()
+		nextStatusBarColor = toColorSource?.statusBarInMaskColor?()
+		
+		var nextTintColor:UIColor?
+		nextTintColor = fromColorSource?.tintOutColor?()
+		nextTintColor = toColorSource?.tintInColor?()
+		
+		
         let containerView = transitionContext.containerView
         let shadowMask = UIView(frame: containerView.bounds)
         shadowMask.backgroundColor = UIColor.black
@@ -47,7 +58,16 @@ class RainbowPushAnimator: NSObject, UIViewControllerAnimatedTransitioning {
             if let navigationColor = nextColor {
                 fromVC.navigationController?.navigationBar.rb.backgroundColor = navigationColor
             }
-            
+			
+			// added by cgi
+			if let statusBarColor = nextStatusBarColor {
+				fromVC.navigationController?.navigationBar.rb.statusBarColor = statusBarColor
+			}
+			
+			if let tintColor = nextTintColor {
+				fromVC.navigationController?.navigationBar.tintColor = tintColor
+			}
+			
             }) { (finished) -> Void in
                 fromVC.view.frame = originFromFrame
                 shadowMask.removeFromSuperview()

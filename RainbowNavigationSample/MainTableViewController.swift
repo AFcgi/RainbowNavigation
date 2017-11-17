@@ -21,7 +21,7 @@ class MainTableViewController: UITableViewController, RainbowColorSource {
         navigationController?.navigationBar.rb.statusBarColor = UIColor(white: 0, alpha: 0.2)
         
         if let navigationController = navigationController {
-            rainbowNavigation.wireTo(navigationController: navigationController)
+			rainbowNavigation.wireTo(navigationController: navigationController, navigationDelegate: nil)
         }
     }
 
